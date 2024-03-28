@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Recognizer Using AWS</title>
+  <style>
+    /* Set a fixed size for the image containers with a background color */
+    .image-container {
+      width: 500px;
+      height: 500px;
+      overflow: hidden;
+      background-color: #5320203f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .container-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row; /* Adjust the direction as needed */
+      margin-bottom: 20px; /* Adjust the margin as needed */
+    }
+
+    .arrow {
+      margin: 0 20px;
+      font-size: 24px;
+    }
+
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+
+    button {
+      background-color: #008CBA;
+      color: white;
+      padding: 15px 20px;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      margin: auto; /* Center the button */
+      display: block; /* Make it a block element for margin: auto to work */
+      position: relative; /* Set position to relative */
+    }
+
+    button #recognizeLoader {
+      position: absolute; /* Position loader absolutely within the button */
+      top: 5%;
+      left: 110%; /* Position loader to the right of the button */
+      transform: translate(-50%, -50%);
+      display: none; /* Initially hide loader */
+    }
+
+    button #recognizeLive {
+      background-color: #4CAF50;
+      margin-top: 10px;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .message-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Face Recognizer Using AWS</h1>
+
+  <form id="imageForm">
+    <input type="file" id="fileInput" style="display: none;">
+    <label for="imageName">Image Name:</label>
+    <input type="text" id="imageName" placeholder="Enter a custom name">
+    <button type="button" onclick="openFileExplorer()">Upload Image
+    <div id="uploadLoader" class="loader"></div>
+  </button>
+  </form>
+
+  <!-- Display success message -->
+  <div id="successMessage" class="message-container" style="color: green; display: none;">
+    Image uploaded successfully!
+  </div>
+
+  <hr>
+
+  <label for="imageList">Select an Image:</label>
+  <select id="imageList" onchange="handleImageSelection()">
+    <!-- Dropdown options will be dynamically populated using JavaScript -->
+  </select>
+
+  <hr>
+
+  <!-- Heading for Recognize face -->
+  <h2 id="recognizeFaceHeading" style="display:flexbox; text-align:center">Recognize face</h2>
+
+  <!-- Container for the selected image with a fixed size and background color -->
+  <div class="container-wrapper">
+    <div id="selectedImage" class="image-container">
+      <!-- Display the selected image -->
+    </div>
+    <div class="arrow">➡️</div>
+    <div id="recognizedImageContainer" class="image-container">
+      <!-- Display the recognized image -->
+    </div>
+  </div>
+
+  <!-- Container for the "Recognize Face" button -->
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <button onclick="recognizeFace()">
+      Recognize Face
+      <div id="recognizeLoader" class="loader"></div>
+    </button>
+  </div>
+
+  <!-- Messages for face recognition -->
+  <div id="faceRecognitionResult" class="message-container"></div>
+
+  <h2 id="recognizeLiveHeading" style="display:flexbox; text-align:center">Recognize live</h2>
+
+  <!-- Container for live video feed -->
+  <div class="container-wrapper">
+    <div id="liveVideoContainer" class="image-container">
+      <!-- Live video feed will be displayed here -->
+    </div>
+  </div>
+
+  <!-- Container for the "Recognize Live" button -->
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <button id="recognizeLive" onclick="recognizeLive()">Recognize Live</button>
+  </div>
+
+  <!-- Messages for live face recognition -->
+  <div id="liveRecognitionResult" class="message-container"></div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.1221.0/aws-sdk.min.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>
