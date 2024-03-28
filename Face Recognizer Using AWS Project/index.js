@@ -1,13 +1,14 @@
-// Replace 'YOUR_ACCESS_KEY_ID' and 'YOUR_SECRET_ACCESS_KEY' with your AWS IAM user credentials
+// Replace 'YOUR_ACCESS_KEY_ID' and 'YOUR_SECRET_ACCESS_KEY' with your 
+// AWS IAM user credentials
 AWS.config.update({
-  accessKeyId: 'AKIAU6GD3KGOT6UACO4K',
-  secretAccessKey: 'OxvUsKJBXaoNQ7ZowykhHZxXNPy+BLu3zy1PKCI3',
+  accessKeyId: 'Your access key Id',
+  secretAccessKey: 'Your secret access key',
   region: 'us-east-1', // Update with your preferred AWS region
 });
 
 const s3 = new AWS.S3();
 const rekognition = new AWS.Rekognition();
-const bucketName = 'projsamplefacebucket'; // Replace with your S3 bucket name
+const bucketName ='yourbucketname'; // Replace with your S3 bucket name
 
 function openFileExplorer() {
   document.getElementById('fileInput').click();
@@ -28,8 +29,8 @@ function handleImageUpload(event) {
 
     // Upload the file to S3
     const params = {
-      Bucket: 'projsamplefacebucket',
-      Key: `images/uploads/${fileName}`,
+      Bucket: 'your bucketname',
+      Key: `path in aws s3/${fileName}`,
       Body: file,
       ACL: 'public-read',
     };
@@ -58,9 +59,9 @@ function populateImageList() {
   console.log('Fetching image list...');
   const imageListDropdown = document.getElementById('imageList');
   const params = {
-    Bucket: 'projsamplefacebucket',
+    Bucket: 'your bucketname',
     Delimiter: '/',
-    Prefix: 'images/uploads/', // Adjust the prefix based on your S3 folder structure
+    Prefix: 'images path in s3', // Adjust the prefix based on your S3 folder structure
   };
 
   s3.listObjectsV2(params, (err, data) => {
@@ -74,7 +75,7 @@ function populateImageList() {
 
       // Populate dropdown with image names
       data.Contents.forEach((object) => {
-        const imageName = object.Key.replace('images/uploads/', ''); // Adjust the prefix
+        const imageName = object.Key.replace('/path in s3 ', ''); // Adjust the prefix
         imageListDropdown.innerHTML += `<option value="${imageName}">${imageName}</option>`;
       });
 
@@ -94,7 +95,7 @@ function handleImageSelection() {
 
   // Display the selected image within the fixed-size container
   if (selectedImageName) {
-    selectedImageContainer.innerHTML = `<img src="https://${bucketName}.s3.amazonaws.com/images/uploads/${selectedImageName}" alt="${selectedImageName}" style="width: 100%; height: 100%; object-fit: contain;">`;
+    selectedImageContainer.innerHTML = `<img src="https://${bucketName}.s3.amazonaws.com/path in s3/${selectedImageName}" alt="${selectedImageName}" style="width: 100%; height: 100%; object-fit: contain;">`;
     recognizeFaceHeading.style.display = 'block'; // Show the heading for Recognize face
   } else {
     selectedImageContainer.innerHTML = ''; // Clear the selected image container
@@ -123,7 +124,7 @@ function recognizeFace() {
   // Show loader while recognizing
   document.getElementById('recognizeLoader').style.display = 'block';
 
-  const imageSrc = `https://${bucketName}.s3.amazonaws.com/images/uploads/${selectedImageName}`;
+  const imageSrc = `https://${bucketName}.s3.amazonaws.com/path in s3/${selectedImageName}`;
 
   // Create an image element to get the original dimensions
   const img = new Image();
@@ -135,8 +136,8 @@ function recognizeFace() {
     const params = {
       Image: {
         S3Object: {
-          Bucket: 'projsamplefacebucket',
-          Name: `images/uploads/${selectedImageName}`,
+          Bucket: 'your bucket name',
+          Name: `path in s3/${selectedImageName}`,
         },
       },
     };
@@ -210,15 +211,15 @@ function displayRecognizedImage(selectedImageName, originalWidth, originalHeight
 
   // Draw the original image on the canvas with fixed dimensions
   const img = new Image();
-  img.src = `https://${bucketName}.s3.amazonaws.com/images/uploads/${selectedImageName}`;
+  img.src = `https://${bucketName}.s3.amazonaws.com/path in s3/${selectedImageName}`;
   img.onload = function () {
     ctx.drawImage(img, 0, 0, fixedWidth, fixedHeight);
 
     const params = {
       Image: {
         S3Object: {
-          Bucket: 'projsamplefacebucket',
-          Name: `images/uploads/${selectedImageName}`,
+          Bucket: 'your bucket name',
+          Name: `path in s3/${selectedImageName}`,
         },
       },
     };
